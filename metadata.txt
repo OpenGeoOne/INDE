@@ -6,14 +6,14 @@
 name=INDE
 qgisMinimumVersion=3.0
 description=This plugin allows connection to all ows services available in Brazil National Spatial Data Infrastructure
-version=0.1
-author=Julierme G Pinheiro / Censipam - Ministry of Defense
-email=julierme.pinheiro@sipam.gov.br
+version=1.1
+author=Julierme G Pinheiro, Leandro França
+email=contato@geoone.com.br
 
 about=We are delighted to launch this plugin during the 12 th anniversary of Brazil National Spatial Data Infrastructure known by INDE/NSDI. This plugin allows multiple connections to Brazil National Spatial Data Infrastructure OWS services.
 
 tracker=https://github.com/indeOWS/INDE/issues
-repository=https://github.com/indeOWS/INDE
+repository=https://github.com/OpenGeoOne/INDE
 # End of mandatory metadata
 
 # Recommended items:
@@ -25,7 +25,7 @@ hasProcessingProvider=no
 # Tags are comma separated with spaces allowed
 tags=python
 
-homepage=https://github.com/indeOWS/INDE
+homepage=https://github.com/OpenGeoOne/INDE
 category=Vector
 icon=icon.png
 # experimental flag
