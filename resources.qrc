@@ -1,6 +1,6 @@
 <RCC>
   <qresource prefix="/plugins/INDE">
-    <file>censipamLogo.png</file>
+    <file>GeoOne.png</file>
     <file>indeLogo.png</file>
     <file>icon.png</file>
   </qresource>
