@@ -145,10 +145,10 @@ class INDE:
 
         if add_to_toolbar:
             # Adds plugin icon to Plugins toolbar
-            self.iface.addToolBarIcon(action)
+            self.iface.addWebToolBarIcon(action)
 
         if add_to_menu:
-            self.iface.addPluginToVectorMenu(
+            self.iface.addPluginToWebMenu(
                 self.menu,
                 action)
 
@@ -172,16 +172,36 @@ class INDE:
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
         for action in self.actions:
-            self.iface.removePluginVectorMenu(
+            self.iface.removePluginWebMenu(
                 self.tr(u'&INDE'),
                 action)
-            self.iface.removeToolBarIcon(action)
+            self.iface.removeWebToolBarIcon(action)
 
     def noService(self, ogc, institution):
         msg = QMessageBox()
         msg.setWindowTitle('No Service')
         msg.setText('No ' + ogc + ' available for ' + institution)
         msg.setIcon(QMessageBox.Information)
+        msg.exec_()
+
+    def institutionOWSService(self, ogc, institution):
+
+        msg = QMessageBox()
+        msg.setWindowTitle(institution + ' ' + ogc + ' services')
+        msg.setText(ogc + ' connections for ' + institution +
+                    ' available in: href="https://acervofundiario.incra.gov.br/acervo/ogc.php')
+        msg.setIcon(QMessageBox.Information)
+        msg.exec_()
+
+    def removeItemsWarning(self):
+        msg = QMessageBox()
+        msg.setWindowTitle('Remove Items')
+        msg.setText('You must select an item to be removed')
+        msg.setIcon(QMessageBox.Information)
+        msg.setStandardButtons(QMessageBox.Cancel | QMessageBox.Ok)
+        msg.setDetailedText(
+            'You have not selected any item to be removed. Please do so.')
+        msg.setDefaultButton(QMessageBox.Ok)
         msg.exec_()
 
     def addAllItems(self, items, id):
@@ -320,12 +340,21 @@ class INDE:
             itemsToBeAdd.append(
                 self.dlg.listWidgetSelectedInstitutions.item(i).text())
 
+        if 'AESA_PB' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "AESA_PB", "", "", "",
+                                                       "http://siegrh.aesa.pb.gov.br:8080/geoserver/ows?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
         if 'ANA' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "ANA", "", "", "",
-                                                       "http://wms.snirh.gov.br/arcgis/services/SNIRH/2016/MapServer/WMSServer/wms", "", "22", "0"))
+                                                       "http://www.snirh.gov.br/arcgis/services/INDE/Camadas/MapServer/WMSServer?version=1.3.0", "", "22", "0"))
+        if 'ANA_AQUACOOPE' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "ANA_AQUACOOPE", "", "", "",
+                                                       "https://www.aquacoope.org/geoserver/ows?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
         if 'ANATEL' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "ANATEL", "", "", "",
                                                        "http://sistemas.anatel.gov.br/geoserver/ANATEL/ows?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
+        if 'ANM' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "ANM", "", "", "",
+                                                       "https://geoservicos.inde.gov.br/geoserver/ANM/ows?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
         if 'BNDES' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "BNDES", "", "", "",
                                                        "https://geoservicos.inde.gov.br/geoserver/BNDES/ows?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
@@ -337,15 +366,28 @@ class INDE:
                                                        "http://cmr.funai.gov.br/geoserver/ows?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
         if 'CPRM' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "CPRM", "", "", "",
+                                                       "https://geoservicos.cprm.gov.br/geoserver/geologia/ows/?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
+        if 'CPRM_SACE' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "CPRM_SACE", "", "", "",
                                                        "http://sace.cprm.gov.br/geoserver/ows?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
-        if 'EB_DSG' in itemsToBeAdd:
-            connectionList.append(connectionAtributtes(ogc, "EB_DSG", "", "", "",
+
+        if 'DHN' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "DHN", "", "", "",
+                                                       "https://idem.dhn.mar.mil.br/geoserver/ows?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
+        if 'DNIT' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "DNIT", "", "", "",
+                                                       "https://servicos.dnit.gov.br/dnitgeo/geoserver/ows?service=WMS&version=1.3.0&request=GetCapabilities", "", "22", "0"))
+        if 'DPC' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "DPC", "", "", "",
+                                                       "https://geoservicos.inde.gov.br/geoserver/DPC/ows?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
+        if 'DSG' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "DSG", "", "", "",
                                                        "http://www.geoportal.eb.mil.br/mapcache3857?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
         if 'EMBRAPA ALGODAO' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "EMBRAPA ALGODAO", "", "", "",
                                                        "http://geoinfo.cnpa.embrapa.br/geoserver/ows?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
         if 'EMBRAPA AMAZONIA ORIENTAL' in itemsToBeAdd:
-            connectionList.append(connectionAtributtes(ogc, "EMBRAPA AMAZONIA ORIENTAl", "", "", "",
+            connectionList.append(connectionAtributtes(ogc, "EMBRAPA AMAZONIA ORIENTAL", "", "", "",
                                                        "http://geoinfo.cpatu.embrapa.br/geoserver/ows?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
         if 'EMBRAPA CAPRINOS E OVINOS' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "EMBRAPA CAPRINOS E OVINOS", "", "", "",
@@ -359,7 +401,7 @@ class INDE:
         if 'EMBRAPA GADO DE LEITE' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "EMBRAPA GADO DE LEITE", "", "", "",
                                                        "http://geoinfo.cnpgl.embrapa.br/geoserver/ows?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
-        if 'EMBRAPA INFORMATICA AGROPECUARIA' in itemsToBeAdd:
+        if 'EMBRAPA INFOAGRO' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "EMBRAPA INFOAGRO", "", "", "",
                                                        "http://geoinfo.cnptia.embrapa.br/geoserver/ows?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
         if 'EMBRAPA MEIO AMBIENTE' in itemsToBeAdd:
@@ -380,12 +422,19 @@ class INDE:
         if 'EMBRAPA TERRITORIAL' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "EMBRAPA TERRITORIAL", "", "", "",
                                                        "http://geoinfo.cnpm.embrapa.br/geoserver/ows?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
-        if 'FAB_ICA' in itemsToBeAdd:
-            connectionList.append(connectionAtributtes(ogc, "FAB_ICA", "", "", "",
-                                                       "http://www.aisweb.decea.gov.br/geoserver/ows?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
+        if 'ICA' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "ICA", "", "", "",
+                                                       "https://geoaisweb.decea.mil.br/geoserver/ows?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
+        if 'IDE_DF' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "IDE_DF", "", "", "",
+                                                       "https://www.geoservicos1.segeth.df.gov.br/arcgis/services/Geoportal/ide_df/MapServer/WMSServer?version=1.3.0", "", "22", "0"))
+        if 'INCRA' in itemsToBeAdd:
+            institution = 'INCRA'
+            self.institutionOWSService(ogc, institution)
+
         if 'IBAMA' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "IBAMA", "", "", "",
-                                                       "https://geoaisweb.decea.gov.br/geoserver/ows?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
+                                                       "http://siscom.ibama.gov.br/geoserver/ows?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
         if 'IBGE' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "IBGE", "", "", "",
                                                        "https://geoservicos.ibge.gov.br/geoserver/ows?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
@@ -398,6 +447,9 @@ class INDE:
         if 'INPE' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "INPE", "", "", "",
                                                        "http://terrabrasilis.dpi.inpe.br/geoserver/ows?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
+        if 'INPE_CBERS' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "INPE_CBERS", "", "", "",
+                                                       "http://www.dpi.inpe.br/fipcerrado-geoserver/ows/wms?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
         if 'INPE FOCOS DE CALOR' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "INPE FOCOS DE CALOR", "", "", "",
                                                        "http://queimadas.dgi.inpe.br/queimadas/mapas/ows?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
@@ -410,21 +462,34 @@ class INDE:
         if 'MP' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "MP", "", "", "",
                                                        "https://geoservicos.inde.gov.br/geoserver/MPOG/wms", "", "22", "0"))
+        if 'PEM' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "PEM", "", "", "",
+                                                       "https://geoservicos.inde.gov.br/geoserver/PEM/ows?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
         if 'SFB' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "SFB", "", "", "",
                                                        "https://sistemas.florestal.gov.br/geoserver/ows?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
+        if 'SFB_CAR' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "SFB_CAR", "", "", "",
+                                                       "https://geoserver.car.gov.br/geoserver/ows?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
         if 'SPM' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "SPM", "", "", "",
                                                        "https://geoservicos.inde.gov.br/geoserver/SPM/wms", "", "22", "0"))
         if 'CELEPAR_PR' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "CELEPAR_PR", "", "", "",
                                                        "http://geoserver.pr.gov.br/geoserver/ows?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
+        if 'IDE_BA' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "IDE_BA", "", "", "",
+                                                       "http://servicos.geo.sei.ba.gov.br/bahia_cart_100k_7080/WMTS", "", "22", "0"))
         if 'IDEA_SP' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "IDEA_SP", "", "", "",
                                                        "http://datageo.ambiente.sp.gov.br/geoserver/ows?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
         if 'IDE_SP' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "IDE_SP", "", "", "",
                                                        "https://ide.emplasa.sp.gov.br/geoserver/ows?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
+        if 'IEDE_RS' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "IEDE_RS", "", "", "",
+                                                       "http://iede.rs.gov.br/server/services/INDE/IEDE_RS/MapServer/WMSServer?", "", "22", "0"))
+
         if 'IDE_ES_GEOBASES' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "IDE_ES_GEOBASES", "", "", "",
                                                        "https://ide.geobases.es.gov.br/geoserver/ows?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
@@ -443,7 +508,11 @@ class INDE:
         if 'SEFIN' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "SEFIN", "", "", "",
                                                        "https://geoserver.sefin.fortaleza.ce.gov.br/geoserver/ows?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
-        if 'PREFEITURA DE BELO HORIZONTE' in itemsToBeAdd:
+        if 'SEMACE_CE' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "SEMACE_CE", "", "", "",
+                                                       "https://geoservicos.inde.gov.br/geoserver/SEMACECE/ows?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
+
+        if 'PREFEITURA DE BH' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "PREFEITURA DE BH", "", "", "",
                                                        "http://bhmap.pbh.gov.br/v2/api/idebhgeo/ows?service=wms&version=1.3.0&request=GetCapabilities", "", "22", "0"))
         if 'UFABC_SP' in itemsToBeAdd:
@@ -461,13 +530,24 @@ class INDE:
             itemsToBeAdd.append(
                 self.dlg.listWidgetSelectedInstitutions.item(i).text())
 
+        if 'AESA_PB' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "AESA_PB", "", "", "",
+                                                       "http://siegrh.aesa.pb.gov.br:8080/geoserver/ows?service=wfs&version=2.0.0&request=GetCapabilities", "", "22", "0"))
+
         if 'ANA' in itemsToBeAdd:
             institution = 'ANA'
             self.noService(ogc, institution)
+        if 'ANA_AQUACOOPE' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "ANA_AQUACOOPE", "", "", "",
+                                                       "https://www.aquacoope.org/geoserver/ows?service=wfs&version=2.0.0&request=GetCapabilities", "", "22", "0"))
 
         if 'ANATEL' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "ANATEL", "", "", "",
                                                        "http://sistemas.anatel.gov.br/geoserver/ANATEL/ows?service=wfs&version=1.3.0&request=GetCapabilities", "", "22", "0"))
+        if 'ANM' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "ANM", "", "", "",
+                                                       "https://geoservicos.inde.gov.br/geoserver/ANM/ows?service=wfs&version=2.0.0&request=GetCapabilities", "", "22", "0"))
+
         if 'BNDES' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "BNDES", "", "", "",
                                                        "https://geoservicos.inde.gov.br/geoserver/BNDES/ows?service=wfs&version=1.3.0&request=GetCapabilities", "", "22", "0"))
@@ -479,15 +559,29 @@ class INDE:
                                                        "http://cmr.funai.gov.br/geoserver/ows?service=wfs&version=1.3.0&request=GetCapabilities", "", "22", "0"))
         if 'CPRM' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "CPRM", "", "", "",
-                                                       "https://geoservicos.cprm.gov.br/geoserver/geologia/ows/?service=wfs&version=1.3.0&request=GetCapabilities", "", "22", "0"))
-        if 'EB_DSG' in itemsToBeAdd:
-            institution = 'EB_DSG'
+                                                       "https://geoservicos.cprm.gov.br/geoserver/geologia/ows/?service=wfs&version=2.0.0&request=GetCapabilities", "", "22", "0"))
+
+        if 'CPRM_SACE' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "CPRM_SACE", "", "", "",
+                                                       "https://geoservicos.cprm.gov.br/geoserver/geologia/ows/?service=wfs&version=2.0.0&request=GetCapabilities", "", "22", "0"))
+        if 'DHN' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "DHN", "", "", "",
+                                                       "https://idem.dhn.mar.mil.br/geoserver/ows?service=wfs&version=2.0.0&request=GetCapabilities", "", "22", "0"))
+        if 'DNIT' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "DNIT", "", "", "",
+                                                       "http://servicos.dnit.gov.br/dnitgeo/geoserver/ows?service=wfs&version=2.0.0&request=GetCapabilities", "", "22", "0"))
+        if 'DPC' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "DPC", "", "", "",
+                                                       "https://geoservicos.inde.gov.br/geoserver/DPC/ows?service=wfs&version=2.0.0&request=GetCapabilities", "", "22", "0"))
+
+        if 'DSG' in itemsToBeAdd:
+            institution = 'DSG'
             self.noService(ogc, institution)
         if 'EMBRAPA ALGODAO' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "EMBRAPA ALGODAO", "", "", "",
                                                        "http://geoinfo.cnpa.embrapa.br/geoserver/ows?service=wfs&version=1.3.0&request=GetCapabilities", "", "22", "0"))
         if 'EMBRAPA AMAZONIA ORIENTAL' in itemsToBeAdd:
-            connectionList.append(connectionAtributtes(ogc, "EMBRAPA AMAZONIA ORIENTAl", "", "", "",
+            connectionList.append(connectionAtributtes(ogc, "EMBRAPA AMAZONIA ORIENTAL", "", "", "",
                                                        "http://geoinfo.cpatu.embrapa.br/geoserver/ows?service=wfs&version=1.3.0&request=GetCapabilities", "", "22", "0"))
         if 'EMBRAPA CAPRINOS E OVINOS' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "EMBRAPA CAPRINOS E OVINOS", "", "", "",
@@ -501,9 +595,9 @@ class INDE:
         if 'EMBRAPA GADO DE LEITE' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "EMBRAPA GADO DE LEITE", "", "", "",
                                                        "http://geoinfo.cnpgl.embrapa.br/geoserver/ows?service=wfs&version=1.3.0&request=GetCapabilities", "", "22", "0"))
-        if 'EMBRAPA INFORMATICA AGROPECUARIA' in itemsToBeAdd:
+        if 'EMBRAPA INFOAGRO' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "EMBRAPA INFOAGRO", "", "", "",
-                                                       "http://geoinfo.cnptia.embrapa.br/geoserver/ows?service=wfs&version=1.3.0&request=GetCapabilities", "", "22", "0"))
+                                                       "https://geoinfo.cnptia.embrapa.br/geoserver/ows?service=wfs&version=1.3.0&request=GetCapabilities", "", "22", "0"))
         if 'EMBRAPA MEIO AMBIENTE' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "EMBRAPA MEIO AMBIENTE", "", "", "",
                                                        "http://geoinfo.cnpma.embrapa.br/geoserver/ows?service=wfs&version=1.3.0&request=GetCapabilities", "", "22", "0"))
@@ -522,9 +616,9 @@ class INDE:
         if 'EMBRAPA TERRITORIAL' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "EMBRAPA TERRITORIAL", "", "", "",
                                                        "http://geoinfo.cnpm.embrapa.br/geoserver/ows?service=wfs&version=1.3.0&request=GetCapabilities", "", "22", "0"))
-        if 'FAB_ICA' in itemsToBeAdd:
-            connectionList.append(connectionAtributtes(ogc, "FAB_ICA", "", "", "",
-                                                       "https://geoaisweb.decea.gov.br/geoserver/ows?service=wfs&version=2.0.0&request=GetCapabilities", "", "22", "0"))
+        if 'ICA' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "ICA", "", "", "",
+                                                       "https://geoaisweb.decea.mil.br/geoserver/ows?service=wfs&version=2.0.0&request=GetCapabilities", "", "22", "0"))
         if 'IBAMA' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "IBAMA", "", "", "",
                                                        "http://siscom.ibama.gov.br/geoserver/ows?service=wfs&version=1.3.0&request=GetCapabilities", "", "22", "0"))
@@ -541,6 +635,10 @@ class INDE:
         if 'INPE' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "INPE", "", "", "",
                                                        "http://terrabrasilis.dpi.inpe.br/geoserver/ows?service=wfs&version=1.3.0&request=GetCapabilities", "", "22", "0"))
+        if 'INPE_CBERS' in itemsToBeAdd:
+            institution = 'INPE_CBERS'
+            self.noService(ogc, institution)
+
         if 'INPE FOCOS DE CALOR' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "INPE FOCOS DE CALOR", "", "", "",
                                                        "http://queimadas.dgi.inpe.br/queimadas/mapas/ows?service=wfs&version=1.3.0&request=GetCapabilities", "", "22", "0"))
@@ -553,9 +651,17 @@ class INDE:
         if 'MP' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "MP", "", "", "",
                                                        "https://geoservicos.inde.gov.br/geoserver/MPOG/ows?service=wfs&version=1.3.0&request=GetCapabilities", "", "22", "0"))
+        if 'PEM' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "PEM", "", "", "",
+                                                       "https://geoservicos.inde.gov.br/geoserver/PEM/ows?service=wfs&version=2.0.0&request=GetCapabilities", "", "22", "0"))
+
         if 'SFB' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "SFB", "", "", "",
                                                        "https://sistemas.florestal.gov.br/geoserver/ows?service=wfs&version=1.3.0&request=GetCapabilities", "", "22", "0"))
+        if 'SFB_CAR' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "SFB_CAR", "", "", "",
+                                                       "https://geoserver.car.gov.br/geoserver/ows?service=wfs&version=2.0.0&request=GetCapabilities", "", "22", "0"))
+
         if 'SPM' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "SPM", "", "", "",
                                                        "https://geoservicos.inde.gov.br/geoserver/SPM/ows?service=wfs&version=1.3.0&request=GetCapabilities", "", "22", "0"))
@@ -565,12 +671,46 @@ class INDE:
         if 'IDE_DF' in itemsToBeAdd:
             institution = 'IDE_DF'
             self.noService(ogc, institution)
+        if 'IDE_BA' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "IDE_BA_SANEAMENTO", "", "", "",
+                                                       "https://servicos.geo.sei.ba.gov.br/wfs/cb_100k_abastecimento_saneamento", "", "22", "0"))
+            connectionList.append(connectionAtributtes(ogc, "IDE_BA_ADMINISTRACAO", "", "", "",
+                                                       "http://servicos.geo.sei.ba.gov.br/wfs/cb_100k_administracao_publica", "", "22", "0"))
+            connectionList.append(connectionAtributtes(ogc, "IDE_BA_EDIFICACOES", "", "", "",
+                                                       "https://servicos.geo.sei.ba.gov.br/wfs/cb_100k_edificacoes", "", "22", "0"))
+            connectionList.append(connectionAtributtes(ogc, "IDE_BA_EDU_CULTURA", "", "", "",
+                                                       "https://servicos.geo.sei.ba.gov.br/wfs/cb_100k_educacao_cultura", "", "22", "0"))
+            connectionList.append(connectionAtributtes(ogc, "IDE_BA_ENERGIA", "", "", "",
+                                                       "https://servicos.geo.sei.ba.gov.br/wfs/cb_100k_energia_comunicacoes", "", "22", "0"))
+            connectionList.append(connectionAtributtes(ogc, "IDE_BA_ESTRUTURA", "", "", "",
+                                                       "http://servicos.geo.sei.ba.gov.br/wfs/cb_100k_estrutura_economica", "", "22", "0"))
+            connectionList.append(connectionAtributtes(ogc, "IDE_BA_HIDROGRAFIA", "", "", "",
+                                                       "https://servicos.geo.sei.ba.gov.br/wfs/cb_100k_hidrografia", "", "22", "0"))
+            connectionList.append(connectionAtributtes(ogc, "IDE_BA_LIMITES", "", "", "",
+                                                       "http://servicos.geo.sei.ba.gov.br/wfs/cb_100k_limites", "", "22", "0"))
+            connectionList.append(connectionAtributtes(ogc, "IDE_BA_LOCALIDADES", "", "", "",
+                                                       "https://servicos.geo.sei.ba.gov.br/wfs/cb_100k_localidades", "", "22", "0"))
+            connectionList.append(connectionAtributtes(ogc, "IDE_BA_REFERENCIA", "", "", "",
+                                                       "http://servicos.geo.sei.ba.gov.br/wfs/cb_100k_pontos_referencia", "", "22", "0"))
+            connectionList.append(connectionAtributtes(ogc, "IDE_BA_RELEVO", "", "", "",
+                                                       "https://servicos.geo.sei.ba.gov.br/wfs/cb_100k_relevo", "", "22", "0"))
+            connectionList.append(connectionAtributtes(ogc, "IDE_BA_SAUDE", "", "", "",
+                                                       "http://servicos.geo.sei.ba.gov.br/wfs/cb_100k_saude_serv_social", "", "22", "0"))
+            connectionList.append(connectionAtributtes(ogc, "IDE_BA_TRANSPORTE", "", "", "",
+                                                       "https://servicos.geo.sei.ba.gov.br/wfs/cb_100k_sistema_transporte", "", "22", "0"))
+            connectionList.append(connectionAtributtes(ogc, "IDE_BA_VEGETACAO", "", "", "",
+                                                       "http://servicos.geo.sei.ba.gov.br/wfs/cb_100k_vegetacao", "", "22", "0"))
+
         if 'IDEA_SP' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "IDEA_SP", "", "", "",
                                                        "http://datageo.ambiente.sp.gov.br/geoserver/ows?service=wfs&version=1.3.0&request=GetCapabilities", "", "22", "0"))
         if 'IDE_SP' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "IDE_SP", "", "", "",
-                                                       "https://ide.emplasa.sp.gov.br/geoserver/ows?service=wfs&version=1.3.0&request=GetCapabilities", "", "22", "0"))
+                                                       "http://ide.emplasa.sp.gov.br/geoserver/ows?service=wfs&version=1.3.0&request=GetCapabilities", "", "22", "0"))
+        if 'IEDE_RS' in itemsToBeAdd:
+            institution = 'IEDE_RS'
+            self.noService(ogc, institution)
+
         if 'IDE_ES_GEOBASES' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "IDE_ES_GEOBASES", "", "", "",
                                                        "https://ide.geobases.es.gov.br/geoserver/ows?service=wfs&version=1.3.0&request=GetCapabilities", "", "22", "0"))
@@ -589,12 +729,19 @@ class INDE:
         if 'SEFIN' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "SEFIN", "", "", "",
                                                        "https://geoserver.sefin.fortaleza.ce.gov.br/geoserver/ows?service=wfs&version=1.3.0&request=GetCapabilities", "", "22", "0"))
-        if 'PREFEITURA DE BELO HORIZONTE' in itemsToBeAdd:
+
+        if 'SEMACE_CE' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "SEMACE_CE", "", "", "",
+                                                       "https://geoservicos.inde.gov.br/geoserver/SEMACECE/ows?service=wfs&version=2.0.0&request=GetCapabilities", "", "22", "0"))
+        if 'PREFEITURA DE BH' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "PREFEITURA DE BH", "", "", "",
                                                        "http://bhmap.pbh.gov.br/v2/api/idebhgeo/ows?service=wfs&version=1.3.0&request=GetCapabilities", "", "22", "0"))
         if 'UFABC_SP' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "UFABC_SP", "", "", "",
                                                        "https://geoservicos.inde.gov.br/geoserver/UFABC/ows?service=wfs&version=1.3.0&request=GetCapabilities", "", "22", "0"))
+        if 'INCRA' in itemsToBeAdd:
+            institution = 'INCRA'
+            self.institutionOWSService(ogc, institution)
 
         self.setOwsConnection(sdi, connectionList)
 
@@ -607,13 +754,26 @@ class INDE:
             itemsToBeAdd.append(
                 self.dlg.listWidgetSelectedInstitutions.item(i).text())
 
+        if 'AESA_PB' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "AESA_PB", "", "", "",
+                                                       "http://siegrh.aesa.pb.gov.br:8080/geoserver/ows?service=WCS&version=2.0.1&request=GetCapabilities", "", "22", "0"))
+
         if 'ANA' in itemsToBeAdd:
             institution = 'ANA'
             self.noService(ogc, institution)
 
+        if 'ANA_AQUACOOPE' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "ANA_AQUACOOPE", "", "", "",
+                                                       "https://www.aquacoope.org/geoserver/ows?service=WCS&version=2.0.1&request=GetCapabilities", "", "22", "0"))
+
         if 'ANATEL' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "ANATEL", "", "", "",
                                                        "http://sistemas.anatel.gov.br/geoserver/ANATEL/ows?service=WCS&version=2.0.1&request=GetCapabilities", "", "22", "0"))
+
+        if 'ANM' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "ANM", "", "", "",
+                                                       "https://geoservicos.inde.gov.br/geoserver/ANM/ows?service=WCS&version=2.0.1&request=GetCapabilities", "", "22", "0"))
+
         if 'BNDES' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "BNDES", "", "", "",
                                                        "https://geoservicos.inde.gov.br/geoserver/BNDES/ows?service=WCS&version=2.0.1&request=GetCapabilities", "", "22", "0"))
@@ -624,16 +784,31 @@ class INDE:
             connectionList.append(connectionAtributtes(ogc, "CMR_FUNAI", "", "", "",
                                                        "http://cmr.funai.gov.br/geoserver/ows?service=WCS&version=2.0.1&request=GetCapabilities", "", "22", "0"))
         if 'CPRM' in itemsToBeAdd:
-            institution = 'CPRM'
+            connectionList.append(connectionAtributtes(ogc, "CPRM", "", "", "",
+                                                       "https://geoservicos.cprm.gov.br/geoserver/geologia/ows/?service=WCS&version=2.0.1&request=GetCapabilities", "", "22", "0"))
+
+        if 'CPRM_SACE' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "CPRM_SACE", "", "", "",
+                                                       "https://geoservicos.cprm.gov.br/geoserver/geologia/ows/?service=WCS&version=2.0.1&request=GetCapabilities", "", "22", "0"))
+        if 'DHN' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "DHN", "", "", "",
+                                                       "https://idem.dhn.mar.mil.br/geoserver/ows?service=WCS&version=2.0.1&request=GetCapabilities", "", "22", "0"))
+        if 'DNIT' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "DNIT", "", "", "",
+                                                       "http://servicos.dnit.gov.br/dnitgeo/geoserver/ows?service=WCS&version=2.0.1&request=GetCapabilities", "", "22", "0"))
+        if 'DPC' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "DPC", "", "", "",
+                                                       "https://geoservicos.inde.gov.br/geoserver/DPC/ows?service=WCS&version=2.0.1&request=GetCapabilities", "", "22", "0"))
+
+        if 'DSG' in itemsToBeAdd:
+            institution = 'DSG'
             self.noService(ogc, institution)
-        if 'EB_DSG' in itemsToBeAdd:
-            institution = 'EB_DSG'
-            self.noService(ogc, institution)
+
         if 'EMBRAPA ALGODAO' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "EMBRAPA ALGODAO", "", "", "",
                                                        "http://geoinfo.cnpa.embrapa.br/geoserver/ows?service=WCS&version=2.0.1&request=GetCapabilities", "", "22", "0"))
         if 'EMBRAPA AMAZONIA ORIENTAL' in itemsToBeAdd:
-            connectionList.append(connectionAtributtes(ogc, "EMBRAPA AMAZONIA ORIENTAl", "", "", "",
+            connectionList.append(connectionAtributtes(ogc, "EMBRAPA AMAZONIA ORIENTAL", "", "", "",
                                                        "http://geoinfo.cpatu.embrapa.br/geoserver/ows?service=WCS&version=2.0.1&request=GetCapabilities", "", "22", "0"))
         if 'EMBRAPA CAPRINOS E OVINOS' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "EMBRAPA CAPRINOS E OVINOS", "", "", "",
@@ -647,7 +822,7 @@ class INDE:
         if 'EMBRAPA GADO DE LEITE' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "EMBRAPA GADO DE LEITE", "", "", "",
                                                        "http://geoinfo.cnpgl.embrapa.br/geoserver/ows?service=WCS&version=2.0.1&request=GetCapabilities", "", "22", "0"))
-        if 'EMBRAPA INFORMATICA AGROPECUARIA' in itemsToBeAdd:
+        if 'EMBRAPA INFOAGRO' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "EMBRAPA INFOAGRO", "", "", "",
                                                        "http://geoinfo.cnptia.embrapa.br/geoserver/ows?service=WCS&version=2.0.1&request=GetCapabilities", "", "22", "0"))
         if 'EMBRAPA MEIO AMBIENTE' in itemsToBeAdd:
@@ -668,9 +843,9 @@ class INDE:
         if 'EMBRAPA TERRITORIAL' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "EMBRAPA TERRITORIAL", "", "", "",
                                                        "http://geoinfo.cnpm.embrapa.br/geoserver/ows?service=WCS&version=2.0.1&request=GetCapabilities", "", "22", "0"))
-        if 'FAB_ICA' in itemsToBeAdd:
-            connectionList.append(connectionAtributtes(ogc, "FAB_ICA", "", "", "",
-                                                       "https://geoaisweb.decea.gov.br/geoserver/ows?service=WCS&version=2.0.1&request=GetCapabilities", "", "22", "0"))
+        if 'ICA' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "ICA", "", "", "",
+                                                       "https://geoaisweb.decea.mil.br/geoserver/ows?service=WCS&version=2.0.1&request=GetCapabilities", "", "22", "0"))
         if 'IBAMA' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "IBAMA", "", "", "",
                                                        "http://siscom.ibama.gov.br/geoserver/ows?service=WCS&version=2.0.1&request=GetCapabilities", "", "22", "0"))
@@ -680,6 +855,11 @@ class INDE:
         if 'IBGE_ODS' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "IBGE_ODS", "", "", "",
                                                        "https://geoservicos.ibge.gov.br/geoserver/ODS/ows?service=WCS&version=2.0.1&request=GetCapabilities", "", "22", "0"))
+
+        if 'IDE_BA' in itemsToBeAdd:
+            institution = 'IDE_BA'
+            self.noService(ogc, institution)
+
         if 'INDE' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "INDE", "", "", "",
                                                        "https://geoservicos.inde.gov.br/geoserver/ows?service=WCS&version=2.0.1&request=GetCapabilities", "", "22", "0"))
@@ -690,9 +870,17 @@ class INDE:
         if 'INPE FOCOS DE CALOR' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "INPE FOCOS DE CALOR", "", "", "",
                                                        "http://queimadas.dgi.inpe.br/queimadas/mapas/ows?service=WCS&version=2.0.1&request=GetCapabilities", "", "22", "0"))
+
+        if 'INPE_CBERS' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "INPE_CBERS", "", "", "",
+                                                       "http://www.dpi.inpe.br/fipcerrado-geoserver/ows/wms?service=WCS&version=2.0.1&request=GetCapabilities", "", "22", "0"))
+
         if 'IPHAN' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "IPHAN", "", "", "",
                                                        "http://portal.iphan.gov.br/geoserver/ows?service=WCS&version=2.0.1&request=GetCapabilities", "", "22", "0"))
+        if 'INCRA' in itemsToBeAdd:
+            institution = 'INCRA'
+            self.institutionOWSService(ogc, institution)
         if 'MDIC' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "MDIC", "", "", "",
                                                        "https://geoservicos.inde.gov.br/geoserver/MDIC/ows?service=WCS&version=2.0.1&request=GetCapabilities", "", "22", "0"))
@@ -727,6 +915,9 @@ class INDE:
         if 'INEA_RJ' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "INEA_RJ", "", "", "",
                                                        "https://geoservicos.inde.gov.br/geoserver/INEA/ows?service=WCS&version=2.0.1&request=GetCapabilities", "", "22", "0"))
+        if 'IEDE_RS' in itemsToBeAdd:
+            institution = 'IEDE_RS'
+            self.noService(ogc, institution)
         if 'PRODEMG' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "PRODEMG", "", "", "",
                                                        "http://geoserver.prodemge.gov.br/geoserver/ows?service=WCS&version=2.0.1&request=GetCapabilities", "", "22", "0"))
@@ -736,7 +927,18 @@ class INDE:
         if 'SEFIN' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "SEFIN", "", "", "",
                                                        "https://geoserver.sefin.fortaleza.ce.gov.br/geoserver/ows?service=WCS&version=2.0.1&request=GetCapabilities", "", "22", "0"))
-        if 'PREFEITURA DE BELO HORIZONTE' in itemsToBeAdd:
+        if 'SEMACE_CE' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "SEMACE_CE", "", "", "",
+                                                       "https://geoservicos.inde.gov.br/geoserver/SEMACECE/ows?service=WCS&version=2.0.1&request=GetCapabilities", "", "22", "0"))
+        if 'SFB_CAR' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "SFB_CAR", "", "", "",
+                                                       "https://geoserver.car.gov.br/geoserver/ows?service=WCS&version=2.0.1&request=GetCapabilities", "", "22", "0"))
+
+        if 'PEM' in itemsToBeAdd:
+            connectionList.append(connectionAtributtes(ogc, "PEM", "", "", "",
+                                                       "https://geoservicos.inde.gov.br/geoserver/PEM/ows?service=WCS&version=2.0.1&request=GetCapabilities", "", "22", "0"))
+
+        if 'PREFEITURA DE BH' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "PREFEITURA DE BH", "", "", "",
                                                        "http://bhmap.pbh.gov.br/v2/api/idebhgeo/ows?service=WCS&version=2.0.1&request=GetCapabilities", "", "22", "0"))
         if 'UFABC_SP' in itemsToBeAdd:
@@ -745,12 +947,12 @@ class INDE:
 
         self.setOwsConnection(sdi, connectionList)
 
-    def getGroupXYZ(self, ogc, sdi):
-        ows_service = 'qgis/'+ogc
-        sdi.beginGroup(ows_service)
-        groupsXYZ = sdi.childGroups()
-        sdi.endGroup()
-        return groupsXYZ
+    # def getGroupXYZ(self, ogc, sdi):
+        # ows_service = 'qgis/' + ogc
+        # sdi.beginGroup(ows_service)
+        # groupsXYZ = sdi.childGroups()
+        # sdi.endGroup()
+        # return groupsXYZ
 
     def addXyzConnection(self, ogc, sdi, connectionList, connectionAtributtes):
 
@@ -760,6 +962,11 @@ class INDE:
         for i in range(self.dlg.listWidgetSelectedBasemaps.count()):
             itemsToBeAdd.append(
                 self.dlg.listWidgetSelectedBasemaps.item(i).text())
+
+        if 'SENTINEL-2' in itemsToBeAdd:
+            ogc = 'connections-wms'
+            connectionList.append(connectionAtributtes(ogc, "SENTINEL-2", "", "", "",
+                                                       "https://tiles.maps.eox.at/wmts?SERVICE=WMTS&REQUEST=GetCapabilities", "", "22", "0"))
 
         if 'OSM STANDARD' in itemsToBeAdd:
             connectionList.append(connectionAtributtes(ogc, "OSM STANDARD", "", "", "",
@@ -942,15 +1149,58 @@ class INDE:
 
         self.setOwsConnection(sdi, connectionList)
 
-    def removeAllConnectionsXYZ(self, ogc, sdi):
+    # Clead IDE_BA WFS Connections
+    def cleanIDEBAwfsConnection(self, ogc, sdi):
         ows_service = 'qgis/' + ogc
-        groupsXYZ = sdi.childGroups()
-
-        for group in groupsXYZ:
-            sdi.beginGroup(ows_service)
-            sdi.remove("")
-            sdi.endGroup()
+        sdi.beginGroup(ows_service)
+        sdi.remove('IDE_BA_SANEAMENTO')
+        sdi.remove('IDE_BA_ADMINISTRACAO')
+        sdi.remove('IDE_BA_EDIFICACOES')
+        sdi.remove('IDE_BA_EDU_CULTURA')
+        sdi.remove('IDE_BA_ENERGIA')
+        sdi.remove('IDE_BA_ESTRUTURA')
+        sdi.remove('IDE_BA_HIDROGRAFIA')
+        sdi.remove('IDE_BA_LIMITES')
+        sdi.remove('IDE_BA_LOCALIDADES')
+        sdi.remove('IDE_BA_REFERENCIA')
+        sdi.remove('IDE_BA_RELEVO')
+        sdi.remove('IDE_BA_SAUDE')
+        sdi.remove('IDE_BA_TRANSPORTE')
+        sdi.remove('IDE_BA_VEGETACAO')
+        sdi.endGroup()
         self.iface.reloadConnections()
+
+    def removeOWSConnection(self, ogc, sdi, connection):
+        ows_service = 'qgis/' + ogc
+        sdi.beginGroup(ows_service)
+        sdi.remove(connection)
+        sdi.endGroup()
+        self.iface.reloadConnections()
+
+    def removeAllConnectionsOWS(self, ogc, sdi, id):
+
+        if id == 0:
+            numberInstitutionsItems = self.dlg.listWidgetSelectedInstitutions.count()
+            if (numberInstitutionsItems == 0):
+                self.removeItemsWarning()
+            for i in range(self.dlg.listWidgetSelectedInstitutions.count()):
+                connection_name = self.dlg.listWidgetSelectedInstitutions.item(
+                    i).text()
+                if connection_name == 'IDE_BA' and ogc == 'connections-wfs':
+                    self.cleanIDEBAwfsConnection(ogc, sdi)
+
+                self.removeOWSConnection(ogc, sdi, connection_name)
+        else:
+            numberBasemapsItems = self.dlg.listWidgetSelectedBasemaps.count()
+
+            if (numberBasemapsItems == 0):
+                self.removeItemsWarning()
+            for i in range(self.dlg.listWidgetSelectedBasemaps.count()):
+                connection_name = self.dlg.listWidgetSelectedBasemaps.item(
+                    i).text()
+                if connection_name == 'SENTINEL-2':
+                    ogc = 'connections-wms'
+                self.removeOWSConnection(ogc, sdi, connection_name)
 
     def run(self):
         """Run method that performs all the real work"""
@@ -997,48 +1247,70 @@ class INDE:
             xyz = owsConnectionType.get('xyz')
 
             institutionsId = 0
-            institutions = ['ANA',
-                            'ANATEL',
-                            'BNDES',
-                            'CENSIPAM',
-                            'CMR_FUNAI',
-                            'EB_DSG',
-                            'EMBRAPA ALGODAO',
-                            'EMBRAPA AMAZONIA ORIENTAL',
-                            'EMBRAPA CAPRINOS E OVINOS',
-                            'EMBRAPA CLIMA TEMPERADO',
-                            'EMBRAPA FLORESTAS',
-                            'EMPRAPA INFORMATICA APROPECUARIA',
-                            'EMBRAPA MEIO AMBIENTE',
-                            'EMBRAPA PECUARIA SUDESTE',
-                            'EMBRAPA RONDONIA',
-                            'EMBRAPA SOLOS',
-                            'EMBRAPA TABULEIROS COSTEIROS',
-                            'EMBRAPA TERRITORIAL',
-                            'FAB_ICA',
-                            'IBAMA',
-                            'IBGE',
-                            'INDE',
-                            'INPE',
-                            'INPE FOCOS DE CALOR',
-                            'IPHAN',
-                            'MDIC',
-                            'MP',
-                            'IBGE_ODS',
-                            'SFB',
-                            'SPM',
-                            'CELEPAR_PR',
-                            'IDE_DF',
-                            'IDEA_SP',
-                            'IDE_SP',
-                            'IDE_ES_GEOBASES',
-                            'SEPLAG_AL',
-                            'SEFIN',
-                            'PREFEITURA DE BELO HORIZONTE',
-                            'UFABC_SP',
-                            ]
+            institutions = [
+                'AESA_PB',
+                'ANA',
+                'ANA_AQUACOOPE',
+                'ANATEL',
+                'ANM',
+                'BNDES',
+                'CELEPAR_PR',
+                'CENSIPAM',
+                'CMR_FUNAI',
+                'CPRM',
+                'CPRM_SACE',
+                'DHN',
+                'DNIT',
+                'DPC',
+                'DSG',
+                'EMBRAPA ALGODAO',
+                'EMBRAPA AMAZONIA ORIENTAL',
+                'EMBRAPA CAPRINOS E OVINOS',
+                'EMBRAPA CLIMA TEMPERADO',
+                'EMBRAPA FLORESTAS',
+                'EMBRAPA INFOAGRO',
+                'EMBRAPA MEIO AMBIENTE',
+                'EMBRAPA PECUARIA SUDESTE',
+                'EMBRAPA RONDONIA',
+                'EMBRAPA SOLOS',
+                'EMBRAPA TABULEIROS COSTEIROS',
+                'EMBRAPA TERRITORIAL',
+                'IBAMA',
+                'IBGE',
+                'IBGE_ODS',
+                'ICA',
+                'IDE_BA',
+                'IDE_DF',
+                'IDE_ES_GEOBASES',
+                'IDE_MG',
+                'INEA_RJ',
+                'IDEA_SP',
+                'IDE_SP',
+                'IEDE_RS',
+                'INCRA',
+                'INDE',
+                'INPE',
+                'INPE FOCOS DE CALOR',
+                'INPE_CBERS',
+                'IPHAN',
+                'MDIC',
+                'MP',
+                'PEM',
+                'PREFEITURA DE BH',
+                'SEFIN',
+                'SEMACE_CE',
+                'SEPLAG_AL',
+                'SFB',
+                'SFB_CAR',
+                'SPM',
+                'UFABC_SP'
+
+
+            ]
+
             basemapsId = 1
             basemaps = [
+                'SENTINEL-2',
                 'GOOGLE SATELLITE',
                 'GOOGLE TERRAIN',
                 'GOOGLE TERRAIN HYBRID',
@@ -1129,13 +1401,13 @@ class INDE:
             self.dlg.loadXyzLayers.clicked.connect(
                 lambda: self.addXyzConnection(xyz, sdi, connectionList, connectionAtributtes))
             self.dlg.wipeAllConnectionsWms.clicked.connect(lambda:
-                                                           self.removeAllConnectionsXYZ(wms, sdi))
+                                                           self.removeAllConnectionsOWS(wms, sdi, institutionsId))
             self.dlg.wipeAllConnectionsWfs.clicked.connect(lambda:
-                                                           self.removeAllConnectionsXYZ(wfs, sdi))
+                                                           self.removeAllConnectionsOWS(wfs, sdi, institutionsId))
             self.dlg.wipeAllConnectionsWcs.clicked.connect(lambda:
-                                                           self.removeAllConnectionsXYZ(wcs, sdi))
+                                                           self.removeAllConnectionsOWS(wcs, sdi, institutionsId))
             self.dlg.wipeAllConnectionsXyz.clicked.connect(lambda:
-                                                           self.removeAllConnectionsXYZ(xyz, sdi))
+                                                           self.removeAllConnectionsOWS(xyz, sdi, basemapsId))
 
         # show the dialog
         self.dlg.show()
