@@ -27,7 +27,7 @@ hasProcessingProvider=no
 tags=GeoOne, INDE, WMS, WFS, WCS, XYZTiles, OpenLayers, IDE, basemaps, Brazil, Brasil, IBGE, GeoServer, geoservices, geospatial
 
 homepage=https://github.com/OpenGeoOne/INDE
-category=Vector
+category=Web
 icon=icon.png
 # experimental flag
 experimental=False
@@ -41,7 +41,7 @@ deprecated=False
 # plugin_dependencies=
 
 Category of the plugin: Raster, Vector, Database or Web
-# category=
+# category=Web
 
 # If the plugin can run on QGIS Server.
 server=False
