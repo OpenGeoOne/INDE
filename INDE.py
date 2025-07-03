@@ -8,8 +8,8 @@
                               -------------------
         begin                : 2020-10-26
         git sha              : $Format:%H$
-        copyright            : (C) 2020 by Julierme G Pinheiro / Censipam - Ministry of Defense
-        email                : julierme.pinheiro@sipam.gov.br
+        copyright            : (C) 2020 by Julierme G Pinheiro / Leandro França
+        email                : contato@geoone.com.br
  ***************************************************************************/
 
 /***************************************************************************
@@ -21,10 +21,10 @@
  *                                                                         *
  ***************************************************************************/
 """
-from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication
-from qgis.PyQt.QtGui import QIcon, QPixmap
+from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication, Qt, QUrl
+from qgis.PyQt.QtGui import QIcon, QCursor
 from qgis.PyQt.QtWidgets import QAction, QMainWindow, QApplication, QLabel, QMessageBox
-
+from PyQt5.QtGui import QDesktopServices
 # Initialize Qt resources from file resources.py
 from .resources import *
 # Import the code for the dialog
@@ -316,19 +316,55 @@ class INDE:
         for obj in connectionList:
             cType = obj.connectionType
             cName = obj.connectionName
-            sdi.setValue("qgis/%s/%s/authcfg" %
-                         (cType, cName), obj.connectionAuthcfg)
-            sdi.setValue('qgis/%s/%s/password' %
-                         (cType, cName), obj.connectionPassword)
-            sdi.setValue("qgis/%s/%s/referer" %
-                         (cType, cName), obj.connectionReferer)
-            sdi.setValue("qgis/%s/%s/url" % (cType, cName), obj.connectionUrl)
-            sdi.setValue("qgis/%s/%s/username" %
-                         (cType, cName), obj.connectionUsername)
-            sdi.setValue("qgis/%s/%s/zmax" %
-                         (cType, cName), obj.connectionZmax)
-            sdi.setValue("qgis/%s/%s/zmin" %
-                         (cType, cName), obj.connectionZmin)
+            cUrl = obj.connectionUrl
+            if 'wms' == cType:
+                base_path = f"connections/ows/items/wms/connections/items/{cName}"
+                sdi.setValue(f"{base_path}/url", cUrl)
+                sdi.setValue(f"{base_path}/username", "")
+                sdi.setValue(f"{base_path}/password", "")
+                sdi.setValue(f"{base_path}/http-header", "{{}}")
+                sdi.setValue(f"{base_path}/ignore-axis-orientation", False)
+                sdi.setValue(f"{base_path}/invert-axis-orientation", False)
+                sdi.setValue(f"{base_path}/smooth-pixmap-transform", False)
+                sdi.setValue(f"{base_path}/tile-pixel-ratio", 0)
+                sdi.setValue(f"{base_path}/dpi-mode", 7)
+                sdi.setValue(f"{base_path}/ignore-get-feature-info-uri", False)
+                sdi.setValue(f"{base_path}/ignore-get-map-uri", False)
+                sdi.setValue(f"{base_path}/reported-layer-extents", False)
+            elif 'wfs' == cType:
+                base_path = f"connections/ows/items/wfs/connections/items/{cName}"
+                sdi.setValue(f"{base_path}/url", cUrl)
+                sdi.setValue(f"{base_path}/username", "")
+                sdi.setValue(f"{base_path}/password", "")
+                sdi.setValue(f"{base_path}/http-header", "{{}}")
+                sdi.setValue(f"{base_path}/ignore-axis-orientation", False)
+            elif 'wcs' == cType:
+                base_path = f"connections/ows/items/wcs/connections/items/{cName}"
+                sdi.setValue(f"{base_path}/url", cUrl)
+                sdi.setValue(f"{base_path}/username", "")
+                sdi.setValue(f"{base_path}/password", "")
+                sdi.setValue(f"{base_path}/http-header", "{{}}")
+                sdi.setValue(f"{base_path}/ignore-axis-orientation", False)
+            elif 'xyz' == cType:
+                base_path = f"connections/xyz/items/{cName}"
+                sdi.setValue(f"{base_path}/url", cUrl)
+                sdi.setValue(f"{base_path}/http-header", "{'referer': ''}")
+                sdi.setValue(f"{base_path}/zmax", zmax=22)
+                sdi.setValue(f"{base_path}/zmin", zmin=0)
+                
+            # sdi.setValue("qgis/%s/%s/authcfg" %
+            #              (cType, cName), obj.connectionAuthcfg)
+            # sdi.setValue('qgis/%s/%s/password' %
+            #              (cType, cName), obj.connectionPassword)
+            # sdi.setValue("connections/ows/items/%s/connections/items/%s/http-header" %
+            #              (cType, cName), obj.connectionReferer)
+            # sdi.setValue("connections/ows/items/%s/connections/items/%s/url" % (cType, cName), obj.connectionUrl)
+            # sdi.setValue("connections/ows/items/%s/connections/items/%s/username" %
+            #              (cType, cName), obj.connectionUsername)
+            # sdi.setValue("connections/xyz/items/%s/zmax" %
+            #              (cType, cName), obj.connectionZmax)
+            # sdi.setValue("connections/xyz/items/%s/zmin" %
+            #              (cType, cName), obj.connectionZmin)
         self.iface.reloadConnections()
 
     def addWmsConnection(self, ogc, sdi, connectionList, connectionAtributtes):
@@ -1171,10 +1207,22 @@ class INDE:
         self.iface.reloadConnections()
 
     def removeOWSConnection(self, ogc, sdi, connection):
-        ows_service = 'qgis/' + ogc
-        sdi.beginGroup(ows_service)
-        sdi.remove(connection)
-        sdi.endGroup()
+        if ogc == 'wms':
+            base_path = f"connections/ows/items/wms/connections/items/{connection}"
+            sdi.remove(base_path)
+        elif ogc == 'wfs':
+            base_path = f"connections/ows/items/wfs/connections/items/{connection}"
+            sdi.remove(base_path)
+        elif ogc == 'wcs':
+            base_path = f"connections/ows/items/wcs/connections/items/{connection}"
+            sdi.remove(base_path)
+        elif ogc == 'xyz':
+            base_path = f"connections/xyz/items/{connection}"
+            sdi.remove(base_path)
+        # ows_service = 'qgis/' + ogc
+        # sdi.beginGroup(ows_service)
+        # sdi.remove(connection)
+        # sdi.endGroup()
         self.iface.reloadConnections()
 
     def removeAllConnectionsOWS(self, ogc, sdi, id):
@@ -1186,7 +1234,7 @@ class INDE:
             for i in range(self.dlg.listWidgetSelectedInstitutions.count()):
                 connection_name = self.dlg.listWidgetSelectedInstitutions.item(
                     i).text()
-                if connection_name == 'IDE_BA' and ogc == 'connections-wfs':
+                if connection_name == 'IDE_BA' and ogc == 'wfs':
                     self.cleanIDEBAwfsConnection(ogc, sdi)
 
                 self.removeOWSConnection(ogc, sdi, connection_name)
@@ -1199,7 +1247,7 @@ class INDE:
                 connection_name = self.dlg.listWidgetSelectedBasemaps.item(
                     i).text()
                 if connection_name == 'SENTINEL-2':
-                    ogc = 'connections-wms'
+                    ogc = 'wms'
                 self.removeOWSConnection(ogc, sdi, connection_name)
 
     def run(self):
@@ -1236,10 +1284,10 @@ class INDE:
             connectionList = []
             sdi = QSettings()
             owsConnectionType = {
-                "xyz": 'connections-xyz',
-                "wms": 'connections-wms',
-                "wfs": 'connections-wfs',
-                "wcs": 'connections-wcs',
+                "xyz": 'xyz',
+                "wms": 'wms',
+                "wfs": 'wfs',
+                "wcs": 'wcs',
             }
             wms = owsConnectionType.get('wms')
             wfs = owsConnectionType.get('wfs')
@@ -1411,6 +1459,13 @@ class INDE:
 
         # show the dialog
         self.dlg.show()
+        self.dlg.geoonelogo.setCursor(QCursor(Qt.PointingHandCursor))
+        self.dlg.geoonelogo.mousePressEvent = self.abrir_link_geoonelogo
+        self.dlg.indeLogo.setCursor(QCursor(Qt.PointingHandCursor))
+        self.dlg.indeLogo.mousePressEvent = self.abrir_link_inde
+        
+        # show the dialog
+        self.dlg.show()
         # Run the dialog event loop
         result = self.dlg.exec_()
         # See if OK was pressed
@@ -1418,3 +1473,9 @@ class INDE:
             # Do something useful here - delete the line containing pass and
             # substitute with your code.
             pass
+    
+    def abrir_link_geoonelogo(self, event):
+        QDesktopServices.openUrl(QUrl("https://geoone.com.br"))
+    
+    def abrir_link_inde(self, event):
+        QDesktopServices.openUrl(QUrl("https://www.inde.gov.br/CatalogoGeoservicos"))
