@@ -4,13 +4,13 @@
 
 [general]
 name=INDE
-qgisMinimumVersion=3.0
-description=This plugin allows connection to all ows services available in Brazil National Spatial Data Infrastructure
-version=1.1
+qgisMinimumVersion=3.36
+description=Plugin to access the OWS services of INDE – Brazil's National Spatial Data Infrastructure.
+version=1.2.0
 author=Julierme G Pinheiro, Leandro França
 email=contato@geoone.com.br
 
-about=We are delighted to launch this plugin during the 12 th anniversary of Brazil National Spatial Data Infrastructure known by INDE/NSDI. This plugin allows multiple connections to Brazil National Spatial Data Infrastructure OWS services.
+about=This plugin allows you to quickly and easily add WMS, WFS, WCS, and XYZ Tiles connections from Brazilian public institutions cataloged in INDE — the National Spatial Data Infrastructure, coordinated by the Ministry of Planning and the Brazilian Institute of Geography and Statistics (IBGE). With a single click, users can create or remove connections, streamlining access to official geoservices directly within QGIS. Developed and maintained by GeoOne®, the plugin aims to promote interoperability and encourage the use of open-source software by students, professionals, and the broader geospatial community.
 
 tracker=https://github.com/indeOWS/INDE/issues
 repository=https://github.com/OpenGeoOne/INDE
@@ -21,9 +21,10 @@ repository=https://github.com/OpenGeoOne/INDE
 hasProcessingProvider=no
 # Uncomment the following line and add your changelog:
 # changelog=
-
+  1.2.0 - Plugin revival and maintenance adopted by GeoOne
+  1.1 - first version
 # Tags are comma separated with spaces allowed
-tags=python
+tags=GeoOne, INDE, WMS, WFS, WCS, XYZTiles, OpenLayers, IDE, basemaps, Brazil, Brasil, IBGE, GeoServer, geoservices, geospatial
 
 homepage=https://github.com/OpenGeoOne/INDE
 category=Vector
@@ -44,4 +45,3 @@ Category of the plugin: Raster, Vector, Database or Web
 
 # If the plugin can run on QGIS Server.
 server=False
-
