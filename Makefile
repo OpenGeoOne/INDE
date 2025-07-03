@@ -5,8 +5,8 @@
 #							 -------------------
 #		begin				: 2020-10-26
 #		git sha				: $Format:%H$
-#		copyright			: (C) 2020 by Julierme G Pinheiro / Censipam - Ministry of Defense
-#		email				: julierme.pinheiro@sipam.gov.br
+#		copyright			: (C) 2020 by Julierme G Pinheiro / Leandro França
+#		email				: contato@geoone.com.br
 # ***************************************************************************/
 #
 #/***************************************************************************
