@@ -1,4 +1,8 @@
-# INDE Plugin for QGIS
+<p align="center">
+  <img src="icon.png" alt="INDE Plugin Logo" width="150"/>
+</p>
+
+# INDE
 
 ## 🇧🇷 Plugin INDE para o QGIS
 
