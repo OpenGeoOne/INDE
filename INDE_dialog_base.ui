@@ -82,7 +82,7 @@
      </font>
     </property>
     <property name="toolTip">
-     <string>Remove only selected</string>
+     <string>Load only selected</string>
     </property>
     <property name="text">
      <string>Load WMS</string>
@@ -210,7 +210,7 @@
      </font>
     </property>
     <property name="toolTip">
-     <string>Remove only selected</string>
+     <string>Load only selected</string>
     </property>
     <property name="text">
      <string>Load WFS</string>
@@ -231,7 +231,7 @@
      </font>
     </property>
     <property name="toolTip">
-     <string>Remove only selected</string>
+     <string>Load only selected</string>
     </property>
     <property name="text">
      <string>Load WCS</string>
@@ -402,7 +402,7 @@
      </rect>
     </property>
     <property name="toolTip">
-     <string>Remove only selected</string>
+     <string>Load only selected</string>
     </property>
     <property name="text">
      <string>Load XYZ</string>
