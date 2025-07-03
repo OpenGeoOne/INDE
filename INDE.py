@@ -1475,7 +1475,7 @@ class INDE:
             pass
     
     def abrir_link_geoonelogo(self, event):
-        QDesktopServices.openUrl(QUrl("https://geoone.com.br"))
+        QDesktopServices.openUrl(QUrl("https://geoone.com.br/conceitos-ide-geosservicos/"))
     
     def abrir_link_inde(self, event):
         QDesktopServices.openUrl(QUrl("https://www.inde.gov.br/CatalogoGeoservicos"))
