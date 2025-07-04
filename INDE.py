@@ -380,7 +380,7 @@ class INDE:
         for instituicao in InstDic:
             if instituicao in itemsToBeAdd:
                 if not InstDic[instituicao]['wmsAvailable']:
-                    self.noService(ogc, institution)
+                    self.noService(ogc, instituicao)
                 else:
                     connectionList.append(connectionAtributtes(ogc, instituicao, "", "", "",InstDic[instituicao]['url'], "", "22", "0"))
 
@@ -433,7 +433,7 @@ class INDE:
         for instituicao in InstDic:
             if instituicao in itemsToBeAdd:
                 if not InstDic[instituicao]['wfsAvailable']:
-                    self.noService(ogc, institution)
+                    self.noService(ogc, instituicao)
                 else:
                     connectionList.append(connectionAtributtes(ogc, instituicao, "", "", "",InstDic[instituicao]['url'], "", "22", "0"))
 
@@ -523,7 +523,7 @@ class INDE:
         for instituicao in InstDic:
             if instituicao in itemsToBeAdd:
                 if not InstDic[instituicao]['wcsAvailable']:
-                    self.noService(ogc, institution)
+                    self.noService(ogc, instituicao)
                 else:
                     connectionList.append(connectionAtributtes(ogc, instituicao, "", "", "",InstDic[instituicao]['url'], "", "22", "0"))
 
@@ -882,7 +882,7 @@ class INDE:
                 'CPRM_SACE',
                 'DPC',
                 'IDE_BA',
-                'INCRA',
+                #'INCRA',
                 'INPE FOCOS DE CALOR',
                 'INPE_CBERS',
                 'PEM',
