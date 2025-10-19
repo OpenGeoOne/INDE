@@ -22,9 +22,9 @@
  ***************************************************************************/
 """
 from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication, Qt, QUrl
-from qgis.PyQt.QtGui import QIcon, QCursor
+from qgis.PyQt.QtGui import QIcon, QCursor, QDesktopServices
 from qgis.PyQt.QtWidgets import QAction, QMainWindow, QApplication, QLabel, QMessageBox
-from PyQt5.QtGui import QDesktopServices
+# from PyQt5.QtGui import QDesktopServices
 # Initialize Qt resources from file resources.py
 from .resources import *
 from .INDE_urls import InstLista, InstDic
