@@ -6,7 +6,13 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt5 import QtCore
+# from qgis.PyQt import QtCore
+
+try:
+    from PyQt6 import QtCore
+except:
+    from PyQt5 import QtCore
+
 
 qt_resource_data = b"\
 \x00\x07\x36\x48\
