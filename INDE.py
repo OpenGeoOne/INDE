@@ -23,7 +23,8 @@
 """
 from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication, Qt, QUrl
 from qgis.PyQt.QtGui import QIcon, QCursor, QDesktopServices
-from qgis.PyQt.QtWidgets import QAction, QMainWindow, QApplication, QLabel, QMessageBox
+from qgis.PyQt.QtWidgets import QAction, QMainWindow, QApplication, QLabel, QMessageBox, QAbstractItemView
+
 # from PyQt5.QtGui import QDesktopServices
 # Initialize Qt resources from file resources.py
 from .resources import *
@@ -31,6 +32,10 @@ from .INDE_urls import InstLista, InstDic
 # Import the code for the dialog
 from .INDE_dialog import INDEDialog
 import os.path
+
+# Helper p/ enum
+EXTENDED_SEL = getattr(getattr(QAbstractItemView, "SelectionMode", QAbstractItemView), "ExtendedSelection")
+CURSOR_POINTING = getattr(getattr(Qt, "CursorShape", Qt), "PointingHandCursor", getattr(Qt, "PointingHandCursor", None))
 
 
 class INDE:
@@ -170,6 +175,13 @@ class INDE:
         # will be set False in run()
         self.first_start = True
 
+    def msg_exec(self, msg):
+        try:
+            return msg.exec()     # PyQt6
+        except AttributeError:
+            return msg.exec_()    # PyQt5
+
+
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
         for action in self.actions:
@@ -183,7 +195,7 @@ class INDE:
         msg.setWindowTitle('No Service')
         msg.setText('No ' + ogc + ' available for ' + institution)
         msg.setIcon(QMessageBox.Information)
-        msg.exec_()
+        self.msg_exec(msg)
 
     def institutionOWSService(self, ogc, institution):
 
@@ -192,7 +204,7 @@ class INDE:
         msg.setText(ogc + ' connections for ' + institution +
                     ' available in: href="https://acervofundiario.incra.gov.br/acervo/ogc.php')
         msg.setIcon(QMessageBox.Information)
-        msg.exec_()
+        self.msg_exec(msg)
 
     def removeItemsWarning(self):
         msg = QMessageBox()
@@ -203,7 +215,7 @@ class INDE:
         msg.setDetailedText(
             'You have not selected any item to be removed. Please do so.')
         msg.setDefaultButton(QMessageBox.Ok)
-        msg.exec_()
+        self.msg_exec(msg)
 
     def addAllItems(self, items, id):
         if id == 0:
@@ -221,11 +233,11 @@ class INDE:
         # (2 = QAbstractItemView.MultiSelection)
         # (3 = QAbstractItemView.ExtendedSelection)
         # (4 = QAbstractItemView.ContiguousSelection)
-            self.dlg.listWidgetInstitutionAvailableWMS.setSelectionMode(3)
+            self.dlg.listWidgetInstitutionAvailableWMS.setSelectionMode(EXTENDED_SEL)
         else:
             self.dlg.listWidgetBasemapList.clear()
             self.dlg.listWidgetBasemapList.addItems(items)
-            self.dlg.listWidgetBasemapList.setSelectionMode(3)
+            self.dlg.listWidgetBasemapList.setSelectionMode(EXTENDED_SEL)
 
     def addSelectedItems(self, id):
         if id == 0:
@@ -240,7 +252,7 @@ class INDE:
                 msg.setDetailedText(
                     'You have not selected any item to be added. Please do so.')
                 msg.setDefaultButton(QMessageBox.Ok)
-                msg.exec_()
+                self.msg_exec(msg)
             else:
                 x = []
                 x.clear()
@@ -260,7 +272,7 @@ class INDE:
                 msg.setDetailedText(
                     'You have not selected any item to be added. Please do so.')
                 msg.setDefaultButton(QMessageBox.Ok)
-                msg.exec_()
+                self.msg_exec(msg)
             else:
                 x = []
                 x.clear()
@@ -283,7 +295,7 @@ class INDE:
                 msg.setDetailedText(
                     'You have not selected any item to be removed. Please do so.')
                 msg.setDefaultButton(QMessageBox.Ok)
-                msg.exec_()
+                self.msg_exec(msg)
             else:
                 for i in itemsSelected:
                     self.dlg.listWidgetSelectedInstitutions.takeItem(
@@ -300,7 +312,7 @@ class INDE:
                 msg.setDetailedText(
                     'You have not selected any item to be removed. Please do so.')
                 msg.setDefaultButton(QMessageBox.Ok)
-                msg.exec_()
+                self.msg_exec(msg)
             else:
                 for i in itemsSelected:
                     self.dlg.listWidgetSelectedBasemaps.takeItem(
@@ -940,8 +952,8 @@ class INDE:
                                                             self.addSelectedItems(institutionsId))
             self.dlg.buttonAddSelectedBasemaps.clicked.connect(lambda:
                                                                self.addSelectedItems(basemapsId))
-            self.dlg.listWidgetSelectedInstitutions.setSelectionMode(3)
-            self.dlg.listWidgetSelectedBasemaps.setSelectionMode(3)
+            self.dlg.listWidgetSelectedInstitutions.setSelectionMode(EXTENDED_SEL)
+            self.dlg.listWidgetSelectedBasemaps.setSelectionMode(EXTENDED_SEL)
             self.dlg.buttonRemoveSelectedItems.clicked.connect(lambda:
                                                                self.removeSelectedItems(institutionsId))
             self.dlg.buttonRemoveSelectedBasemaps.clicked.connect(lambda:
@@ -968,16 +980,17 @@ class INDE:
                                                            self.removeAllConnectionsOWS(xyz, sdi, basemapsId))
 
         # show the dialog
-        self.dlg.show()
-        self.dlg.geoonelogo.setCursor(QCursor(Qt.PointingHandCursor))
+        self.dlg.geoonelogo.setCursor(QCursor(CURSOR_POINTING))
         self.dlg.geoonelogo.mousePressEvent = self.abrir_link_geoonelogo
-        self.dlg.indeLogo.setCursor(QCursor(Qt.PointingHandCursor))
+        self.dlg.indeLogo.setCursor(QCursor(CURSOR_POINTING))
         self.dlg.indeLogo.mousePressEvent = self.abrir_link_inde
-        
-        # show the dialog
         self.dlg.show()
+        
         # Run the dialog event loop
-        result = self.dlg.exec_()
+        try:
+            result = self.dlg.exec()     # PyQt6
+        except AttributeError:
+            result = self.dlg.exec_()    # PyQt5
         # See if OK was pressed
         if result:
             # Do something useful here - delete the line containing pass and
