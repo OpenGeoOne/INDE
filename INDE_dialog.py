@@ -23,14 +23,20 @@
 """
 
 import os
-import sys
-
 from qgis.PyQt import uic, QtWidgets
 
-sys.path.append(os.path.dirname(__file__))
-# This loads your .ui file so that PyQt can populate your plugin with the elements from Qt Designer
-FORM_CLASS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'INDE_dialog_base.ui'), resource_suffix='')
+# (Opcional, mas recomendado) se você tiver um .qrc compilado:
+# from . import resources_rc
+
+UI_FILE = os.path.join(os.path.dirname(__file__), 'INDE_dialog_base.ui')
+
+# Compat PyQt6/5: sem resource_suffix; no PyQt5 ainda dá para usar from_imports, se quiser.
+try:
+    # PyQt6: assinatura simples
+    FORM_CLASS, _ = uic.loadUiType(UI_FILE)
+except TypeError:
+    # PyQt5 (fallback)
+    FORM_CLASS, _ = uic.loadUiType(UI_FILE, from_imports=False)
 
 
 class INDEDialog(QtWidgets.QDialog, FORM_CLASS):
