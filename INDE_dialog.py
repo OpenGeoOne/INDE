@@ -22,30 +22,27 @@
  ***************************************************************************/
 """
 
-import os
+# INDE_dialog.py
+import os, sys
 from qgis.PyQt import uic, QtWidgets
 
-# (Opcional, mas recomendado) se você tiver um .qrc compilado:
-# from . import resources_rc
+# Aponte para o seu arquivo .ui real
+UI_FILE = os.path.join(os.path.dirname(__file__), "INDE_dialog_base.ui")  # troque o nome se for outro
 
-UI_FILE = os.path.join(os.path.dirname(__file__), 'INDE_dialog_base.ui')
-
-# Compat PyQt6/5: sem resource_suffix; no PyQt5 ainda dá para usar from_imports, se quiser.
+# --- Compat: alias 'resources_rc' -> seu 'resources' do plugin ---
 try:
-    # PyQt6: assinatura simples
-    FORM_CLASS, _ = uic.loadUiType(UI_FILE)
-except TypeError:
-    # PyQt5 (fallback)
-    FORM_CLASS, _ = uic.loadUiType(UI_FILE, from_imports=False)
+    # pacote (quando INDE_dialog.py está no mesmo pacote do plugin)
+    from . import resources as resources_rc
+except Exception:
+    # fallback absoluto (caso de execução diferente)
+    import resources as resources_rc
 
+# registra o alias para que qualquer "import resources_rc" do .ui resolva
+sys.modules.setdefault("resources_rc", resources_rc)
 
-class INDEDialog(QtWidgets.QDialog, FORM_CLASS):
+# --- Classe do diálogo carregando o .ui diretamente ---
+class INDEDialog(QtWidgets.QDialog):
     def __init__(self, parent=None):
-        """Constructor."""
-        super(INDEDialog, self).__init__(parent)
-        # Set up the user interface from Designer through FORM_CLASS.
-        # After self.setupUi() you can access any designer object by doing
-        # self.<objectname>, and you can use autoconnect slots - see
-        # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
-        # #widgets-and-dialogs-with-auto-connect
-        self.setupUi(self)
+        super().__init__(parent)
+        uic.loadUi(UI_FILE, self)   # <- evita loadUiType e o problema do from_imports
+
