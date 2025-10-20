@@ -21,7 +21,7 @@ repository=https://github.com/OpenGeoOne/INDE
 hasProcessingProvider=no
 # Uncomment the following line and add your changelog:
 # changelog=
-  1.2.1 - compatibility with QT5 and QT6
+  1.2.1 - Compatibility with Qt5 and Qt6
   1.2.0 - Plugin revival and maintenance adopted by GeoOne
   1.1 - first version
 # Tags are comma separated with spaces allowed
