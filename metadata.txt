@@ -5,6 +5,7 @@
 [general]
 name=INDE
 qgisMinimumVersion=3.36
+qgisMaximumVersion=4.99
 description=Plugin to access the OWS services of INDE – Brazil's National Spatial Data Infrastructure.
 version=1.2.1
 author=Julierme G Pinheiro, Leandro França
