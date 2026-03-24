@@ -7,7 +7,7 @@ name=INDE
 qgisMinimumVersion=3.36
 qgisMaximumVersion=4.99
 description=Plugin to access the OWS services of INDE – Brazil's National Spatial Data Infrastructure.
-version=1.2.1
+version=1.2.2
 author=Julierme G Pinheiro, Leandro França
 email=contato@geoone.com.br
 
@@ -22,6 +22,7 @@ repository=https://github.com/OpenGeoOne/INDE
 hasProcessingProvider=no
 # Uncomment the following line and add your changelog:
 # changelog=
+  1.2.2 - Updated for compatibility with QGIS 4.0
   1.2.1 - Compatibility with Qt5 and Qt6
   1.2.0 - Plugin revival and maintenance adopted by GeoOne
   1.1 - first version
